@@ -1,25 +1,34 @@
 import prisma from "../../prisma/index.js";
 
-export const fetchAllMessages = async () => {
+export const getUsersForSideBarService = async (userId) => {
+  return await prisma.user.findMany({
+    where: {
+      id: {
+        not: userId,
+      },
+    },
+    select: {
+      id: true,
+      username: true,
+      profilePic: true,
+    },
+  });
+};
+
+export const getMessagesService = async (senderId, receiverId) => {
   return await prisma.message.findMany({
-    include: {
-      sender: {
-        select: {
-          id: true,
-          username: true,
-          profilePic: true,
-        },
-      },
-      receiver: {
-        select: {
-          id: true,
-          username: true,
-          profilePic: true,
-        },
-      },
+    where: {
+      OR: [
+        { senderId: senderId, receiverId: receiverId },
+        { senderId: receiverId, receiverId: senderId },
+      ],
     },
     orderBy: {
       createdAt: "asc",
+    },
+    include: {
+      sender: true,
+      receiver: true,
     },
   });
 };
@@ -39,13 +48,6 @@ export const createMessage = async ({
     },
     include: {
       sender: {
-        select: {
-          id: true,
-          username: true,
-          profilePic: true,
-        },
-      },
-      receiver: {
         select: {
           id: true,
           username: true,

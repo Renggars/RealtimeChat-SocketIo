@@ -1,4 +1,5 @@
 import prisma from "../../prisma/index.js";
+import uploadFile from "../utils/uploadFile.js";
 
 export const getMeService = async (userId) => {
   return prisma.user.findUnique({
@@ -25,4 +26,22 @@ export const getAllUsersService = async (userId) => {
       email: true,
     },
   });
+};
+
+export const updateUserService = async (user, file) => {
+  const profilePicUrl = await uploadFile(
+    file,
+    "profile-pictures",
+    user.profilePic
+  );
+
+  const updatedUser = await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      profilePic: profilePicUrl,
+    },
+  });
+
+  const { password, ...safeUser } = updatedUser;
+  return safeUser;
 };

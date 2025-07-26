@@ -1,10 +1,15 @@
 import express from "express";
-import { getAllUsers, getMe } from "../controllers/user.controller.js";
+import {
+  getAllUsers,
+  getMe,
+  updateProfile,
+} from "../controllers/user.controller.js";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
 router.get("/me", isAuthenticated, getMe);
+router.put("/update-profile-picture", isAuthenticated, updateProfile);
 
 router.get("/", isAuthenticated, getAllUsers);
 

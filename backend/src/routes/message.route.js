@@ -1,13 +1,15 @@
 import { Router } from "express";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
-import { validate } from "../middlewares/validate.js";
-import { createMessageSchema } from "../validations/message.validation.js";
-import { getMessages, sendMessage } from "../controllers/message.controller.js";
+import {
+  getMessages,
+  getUsersForSideBar,
+  sendMessage,
+} from "../controllers/message.controller.js";
 
 const router = Router();
 
-router.get("/", isAuthenticated, getMessages);
-
-router.post("/", isAuthenticated, validate(createMessageSchema), sendMessage);
+router.get("/users", isAuthenticated, getUsersForSideBar);
+router.get("/:id", isAuthenticated, getMessages);
+router.post("/send/:id", isAuthenticated, sendMessage);
 
 export default router;
