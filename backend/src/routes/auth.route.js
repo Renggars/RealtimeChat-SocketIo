@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  checkAuth,
   loginUser,
   logoutUser,
   registerUser,
@@ -10,5 +11,6 @@ const router = Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", isAuthenticated, logoutUser);
+router.get("/check", isAuthenticated, checkAuth);
 
 export default router;

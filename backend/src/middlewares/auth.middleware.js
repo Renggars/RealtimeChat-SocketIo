@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import prisma from "../../prisma/index.js";
 
 export const isAuthenticated = async (req, res, next) => {
   const token = req.cookies.jwt;
@@ -21,6 +22,7 @@ export const isAuthenticated = async (req, res, next) => {
     req.user = safeUser;
     next();
   } catch (err) {
+    console.log(err.message);
     res.status(401).json({ message: "Invalid token" });
   }
 };
