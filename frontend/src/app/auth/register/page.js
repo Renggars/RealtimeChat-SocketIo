@@ -5,7 +5,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
-  const { register } = useAuthStore();
+  const { register, isSigningUp } = useAuthStore();
   const router = useRouter();
 
   const handleRegister = async ({ username, email, password }) => {
@@ -17,5 +17,7 @@ export default function RegisterPage() {
     }
   };
 
-  return <AuthForm type="register" onSubmit={handleRegister} />;
+  return (
+    <AuthForm type="register" onSubmit={handleRegister} loading={isSigningUp} />
+  );
 }
