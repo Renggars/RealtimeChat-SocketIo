@@ -49,9 +49,9 @@ export default function ChatListSidebar() {
         <Input
           placeholder="Cari atau mulai chat baru"
           className="rounded-3xl py-6 px-4 bg-gray-100 text-gray-600 placeholder:text-gray-400
-    border-2 border-transparent hover:border-gray-300
-    focus:border-[#1DAA61]
-    focus-visible:ring-2 focus-visible:ring-[#1DAA61] focus-visible:ring-offset-0
+    border-2 !border-transparent hover:!border-gray-300
+    focus:!border-[#1DAA61] focus:outline-none
+    focus-visible:ring-0 focus:ring-0 focus:shadow-none
     transition-colors duration-200 ease-in-out xl:text-lg"
         />
       </div>

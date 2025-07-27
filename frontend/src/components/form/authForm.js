@@ -1,4 +1,3 @@
-// src/components/AuthForm.js
 "use client";
 
 import { useState } from "react";
@@ -6,12 +5,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export default function AuthForm({ type = "login", onSubmit }) {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ email, password });
+
+    if (type === "register") {
+      onSubmit({ username, email, password });
+    } else {
+      onSubmit({ email, password });
+    }
   };
 
   return (
@@ -19,6 +24,17 @@ export default function AuthForm({ type = "login", onSubmit }) {
       <h1 className="text-xl font-semibold text-center">
         {type === "register" ? "Register" : "Login"}
       </h1>
+
+      {type === "register" && (
+        <Input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      )}
+
       <Input
         type="email"
         placeholder="Email"
@@ -26,6 +42,7 @@ export default function AuthForm({ type = "login", onSubmit }) {
         onChange={(e) => setEmail(e.target.value)}
         required
       />
+
       <Input
         type="password"
         placeholder="Password"
@@ -33,6 +50,7 @@ export default function AuthForm({ type = "login", onSubmit }) {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
+
       <Button type="submit" className="w-full">
         {type === "register" ? "Register" : "Login"}
       </Button>

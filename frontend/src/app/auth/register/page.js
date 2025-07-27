@@ -1,23 +1,19 @@
 "use client";
 
-import AuthForm from "@/components/AuthForm";
+import AuthForm from "@/components/form/authForm";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
-  const handleRegister = async ({ email, password }) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
-      {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+  const { register } = useAuthStore();
+  const router = useRouter();
 
-    if (res.ok) {
-      alert("Registrasi berhasil, silakan login");
-      window.location.href = "/auth/login";
-    } else {
-      alert("Registrasi gagal");
+  const handleRegister = async ({ username, email, password }) => {
+    try {
+      await register({ username, email, password });
+      router.push("/chat");
+    } catch (error) {
+      console.log("error in register:", error);
     }
   };
 
