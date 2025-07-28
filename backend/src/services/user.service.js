@@ -28,7 +28,7 @@ export const getAllUsersService = async (userId) => {
   });
 };
 
-export const updateUserService = async (user, file) => {
+export const updatePictureService = async (user, file) => {
   const profilePicUrl = await uploadFile(
     file,
     "profile-pictures",
@@ -39,6 +39,18 @@ export const updateUserService = async (user, file) => {
     where: { id: user.id },
     data: {
       profilePic: profilePicUrl,
+    },
+  });
+
+  const { password, ...safeUser } = updatedUser;
+  return safeUser;
+};
+
+export const updateUsernameService = async (userId, username) => {
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      username: username,
     },
   });
 
