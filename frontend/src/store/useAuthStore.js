@@ -11,6 +11,7 @@ export const useAuthStore = create((set, get) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
+  isUpdatingUsername: false,
   isCheckingAuth: true,
   onlineUsers: [],
   socket: null,
@@ -70,17 +71,33 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  updateProfile: async (data) => {
-    set({ isUpdatingProfile: true });
+  updatePicture: async (data) => {
+    set({ isUpdatingPicture: true });
     try {
-      const res = await axiosInstance.put("/auth/update-profile", data);
+      const res = await axiosInstance.put("/users/update-picture", data);
       set({ authUser: res.data });
-      toast.success("Profile updated successfully");
+      toast.success("Profile Picture updated successfully");
     } catch (error) {
-      console.log("error in update profile:", error);
-      toast.error(error.response.data.message);
+      console.log("error in update profile picture:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to update profile picture"
+      );
     } finally {
-      set({ isUpdatingProfile: false });
+      set({ isUpdatingPicture: false });
+    }
+  },
+
+  updateUsername: async (data) => {
+    set({ isUpdatingUsername: true });
+    try {
+      const res = await axiosInstance.put("/users/update-username", data);
+      set({ authUser: res.data });
+      toast.success("Username updated successfully");
+    } catch (error) {
+      console.log("error in update username:", error);
+      toast.error(error.response?.data?.message || "Failed to update username");
+    } finally {
+      set({ isUpdatingUsername: false });
     }
   },
 

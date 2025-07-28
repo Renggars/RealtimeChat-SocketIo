@@ -53,7 +53,7 @@ export default function MenuSidebar() {
               <TooltipTrigger asChild>
                 <button
                   onClick={() => router.push(item.path)}
-                  className={`relative h-12 w-12 rounded-full flex items-center justify-center
+                  className={`relative h-12 w-12 rounded-full flex items-center justify-center cursor-pointer
                         ${
                           isActive
                             ? "bg-gray-200 text-gray-800 hover:bg-gray-300"

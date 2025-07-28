@@ -77,7 +77,7 @@ export default function ChatListSidebar() {
         {chatItems.map((item, index) => (
           <div
             key={index}
-            className="flex items-center p-5 border-b bg-gray-100 border-gray-100 hover:bg-gray-100 cursor-pointer rounded-2xl"
+            className="flex items-center p-5 border-b bg-gray-red border-gray-100 hover:bg-gray-100 cursor-pointer rounded-2xl"
           >
             <Image
               className="rounded-full cursor-pointer"
