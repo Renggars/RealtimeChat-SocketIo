@@ -1,11 +1,16 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Search, MoreVertical, Paperclip, Send } from "lucide-react";
+import { Search, MoreVertical, Paperclip, Send, Images } from "lucide-react";
 import Image from "next/image";
 import { useChatStore } from "@/store/useChatStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect, useRef, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function ChatWindow() {
   const {
@@ -17,7 +22,10 @@ export default function ChatWindow() {
   } = useChatStore();
   const { authUser } = useAuthStore();
   const [text, setText] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const scrollRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (!selectedUser) return;
@@ -101,24 +109,76 @@ export default function ChatWindow() {
             Pilih pengguna untuk mulai chat
           </div>
         )}
+        {imagePreview && (
+          <div className="absolute bottom-25 right-8 bg-white rounded-lg shadow-lg p-2 border">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imagePreview}
+              alt="preview"
+              className="max-h-56 w-auto object-cover rounded"
+            />
+            <button
+              type="button"
+              className="block mt-2 cursor-pointer text-xl font-medium bg-red-500 hover:bg-red-600 text-white rounded-full py-2 px-4"
+              onClick={() => {
+                setImageFile(null);
+                setImagePreview(null);
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Area Input Chat */}
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!text.trim() || !selectedUser) return;
-          await sendMessage({ content: text });
+          if (!selectedUser) return;
+          if (!text.trim() && !imageFile) return;
+          await sendMessage({ content: text.trim() || undefined, imageFile });
           setText("");
+          setImageFile(null);
+          setImagePreview(null);
         }}
         className="py-1 mb-5 border-t h-[70px] border-gray-100 bg-white flex items-center space-x-4 rounded-full mx-5"
       >
-        <button
-          type="button"
-          className="text-gray-500 hover:text-gray-700 pl-5 cursor-pointer"
-        >
-          <Paperclip className="h-8 w-8" />
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              className="text-gray-500 hover:text-gray-700 pl-5 cursor-pointer"
+            >
+              <Paperclip className="h-8 w-8" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-48 p-2 space-y-2" sideOffset={30}>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-4 p-2 px-4 rounded hover:bg-gray-100 w-full text-left text-xl cursor-pointer"
+            >
+              <Images className="h-7 w-7 text-blue-500" />
+              <span>Photo</span>
+            </button>
+          </PopoverContent>
+        </Popover>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setImageFile(file);
+              const url = URL.createObjectURL(file);
+              setImagePreview(url);
+            }
+          }}
+        />
+
         <Input
           value={text}
           onChange={(e) => setText(e.target.value)}
