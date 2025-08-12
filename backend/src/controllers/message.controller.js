@@ -1,6 +1,8 @@
+import { emitToUser } from "../sockets/connection.js";
 import {
   createMessage,
   getUsersForSideBarService,
+  getMessagesService,
 } from "../services/message.service.js";
 import uploadFile from "../utils/uploadFile.js";
 
@@ -26,7 +28,7 @@ export const getMessages = async (req, res) => {
 };
 
 export const sendMessage = async (req, res) => {
-  const { content, image } = req.body;
+  const { content } = req.body;
   const { receiverId } = req.params;
   const senderId = req.user.id;
 
@@ -34,7 +36,7 @@ export const sendMessage = async (req, res) => {
     let imageUrl = null;
 
     if (req.file) {
-      imageUrl = await uploadFile(image, "messages");
+      imageUrl = await uploadFile(req.file, "messages");
     }
 
     const message = await createMessage({
@@ -44,8 +46,7 @@ export const sendMessage = async (req, res) => {
       receiverId,
     });
 
-    // Emit ke socket jika kamu pakai socket.io
-    // req.io.emit("newMessage", message);
+    emitToUser(receiverId, "newMessage", message);
 
     res.status(201).json(message);
   } catch (error) {

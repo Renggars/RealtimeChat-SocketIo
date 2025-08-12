@@ -13,8 +13,7 @@ export const loginUser = async (req, res) => {
   try {
     const user = await login(req.body, res);
     res.status(200).json({
-      message: "Login successful",
-      data: {
+      user: {
         id: user.id,
         username: user.username,
         email: user.email,

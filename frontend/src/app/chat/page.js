@@ -12,6 +12,8 @@ const ChatPage = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const router = useRouter();
 
+  console.log({ onlineUsers });
+
   useEffect(() => {
     checkAuth();
     // eslint-disable-next-line react-hooks/exhaustive-deps

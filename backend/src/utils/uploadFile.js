@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
-import supabase from "./supabase.js";
+import supabase from "../lib/supabase.js";
 
 const extractFilenameFromUrl = (url) => {
   return url?.split("/").pop();

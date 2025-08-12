@@ -50,7 +50,7 @@ export default function AuthForm({ type = "login", onSubmit, loading }) {
               </label>
               <Input
                 type="email"
-                placeholder="name@company.com"
+                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

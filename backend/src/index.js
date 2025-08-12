@@ -1,21 +1,10 @@
 import http from "http";
-import { Server } from "socket.io";
 import app from "./app.js";
-import chatSocket from "./sockets/chat.socket.js";
+import { initSocket } from "./sockets/connection.js";
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    credentials: true,
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
-  chatSocket(io, socket);
-});
+initSocket(server);
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () =>

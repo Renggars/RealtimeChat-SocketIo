@@ -19,12 +19,10 @@ export const register = async ({ username, email, password }, res) => {
 
   generateToken(user.id, res);
   return {
-    data: {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      profilePic: user.profilePic,
-    },
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    profilePic: user.profilePic,
   };
 };
 

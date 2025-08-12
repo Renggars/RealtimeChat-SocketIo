@@ -13,12 +13,12 @@ prisma.$on("query", (e) => {
   logger.info(`[Prisma:Query] ${e.query} (${e.duration}ms)`);
 });
 
-prisma.$on("warn", (e) => {
-  logger.warn(`[Prisma:Warn] ${e.message}`);
-});
+// prisma.$on("warn", (e) => {
+//   logger.warn(`[Prisma:Warn] ${e.message}`);
+// });
 
-prisma.$on("error", (e) => {
-  logger.error(`[Prisma:Error] ${e.message}`);
-});
+// prisma.$on("error", (e) => {
+//   logger.error(`[Prisma:Error] ${e.message}`);
+// });
 
 export default prisma;

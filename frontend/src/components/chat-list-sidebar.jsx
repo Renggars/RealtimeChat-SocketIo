@@ -1,31 +1,25 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { PlusSquare, MoreVertical as DotsVerticalIcon } from "lucide-react";
+import { useEffect } from "react";
+import { useChatStore } from "@/store/useChatStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 function NewChatIcon(props) {
   return <PlusSquare {...props} />;
 }
 
 export default function ChatListSidebar() {
-  // Ubah nama fungsi di sini
-  const chatItems = [
-    {
-      name: "Akuu (Anda)",
-      lastMessage: "✔️ tes",
-      time: "12.20",
-      avatarFallback: "A",
-      unread: 0,
-      showBadge: false,
-    },
-    {
-      name: "Akuu (Anda)",
-      lastMessage: "✔️ tes",
-      time: "12.20",
-      avatarFallback: "A",
-      unread: 0,
-      showBadge: false,
-    },
-  ];
+  const { users, getUsers, setSelectedUser, getMessages, selectedUser } =
+    useChatStore();
+  const { onlineUsers } = useAuthStore();
+
+  useEffect(() => {
+    getUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -74,35 +68,44 @@ export default function ChatListSidebar() {
 
       {/* Daftar Chat */}
       <div className="flex-1 overflow-y-auto px-4 space-y-[6px]">
-        {chatItems.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center p-5 border-b bg-gray-red border-gray-100 hover:bg-gray-100 cursor-pointer rounded-2xl"
-          >
-            <Image
-              className="rounded-full cursor-pointer"
-              src="/foto.jpeg"
-              alt="Profile"
-              width={60}
-              height={60}
-              onClick={() => router.push("/profile")}
-            />
-            <div className="ml-4 flex-grow">
-              <div className="flex justify-between items-center">
-                <h2 className="font-normal text-lg">{item.name}</h2>
-                <div className="flex items-center space-x-2">
-                  {item.unread > 0 && item.showBadge && (
-                    <span className="bg-green hover:bg-gray-100xs font-bold px-2 py-1 rou4 cursor-pointerded-full">
-                      {item.unread}
-                    </span>
-                  )}
-                  <span className=" text-gray-500">{item.time}</span>
-                </div>
+        {users.map((user) => {
+          const isOnline = onlineUsers.includes(user.id);
+          const isActive = selectedUser?.id === user.id;
+          return (
+            <button
+              key={user.id}
+              className={`w-full flex items-center p-5 border-b border-gray-100 hover:bg-gray-100 cursor-pointer rounded-2xl text-left ${
+                isActive ? "bg-gray-100" : "bg-white"
+              }`}
+              onClick={() => {
+                setSelectedUser(user);
+                getMessages(user.id);
+              }}
+            >
+              <div className="relative">
+                <Image
+                  className="rounded-full"
+                  src={user.profilePic || "/foto.jpeg"}
+                  alt={user.username}
+                  width={60}
+                  height={60}
+                />
+                <span
+                  className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white ${
+                    isOnline ? "bg-green-500" : "bg-gray-400"
+                  }`}
+                />
               </div>
-              <p className="text text-gray-600 truncate">{item.lastMessage}</p>
-            </div>
-          </div>
-        ))}
+              <div className="ml-4 flex-grow">
+                <div className="flex justify-between items-center">
+                  <h2 className="font-normal text-lg">{user.username}</h2>
+                </div>
+                {/* Placeholder last message */}
+                <p className="text text-gray-600 truncate">&nbsp;</p>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
